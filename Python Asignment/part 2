@@ -1,0 +1,15 @@
+#this code is for part 2 of the assignment
+#its gonna take in the ochem data and  do graphs with it
+
+import pandas as pd
+
+
+
+data = pd.read_csv('Python Asignment/O_chem_data (1).csv')
+print(data)
+
+temp = data['Temperature[C]']
+print(temp)
+
+temp = temp.values
+print(temp)
