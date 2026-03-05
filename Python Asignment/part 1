@@ -15,12 +15,12 @@ evens = np.array([]) #list to hold even numbers
 odds = np.array([])  #list to hold odd numbers
            
 for i in range(size):
-    if vec2[i] == 0:
-        evens = np.append(evens, vec[i])
-    else:
+    if vec2[i] == 0:     #if moduus is zero then put it into the evens array
+        evens = np.append(evens, vec[i])   #append add the number to the end of the array
+    else:                                   #all other elements must be odd if not even
         odds = np.append(odds, vec[i])
 
-print("evens:    ",evens)
+print("evens:    ",evens) #prints the output
 print("odds:      ",odds)
 
 
