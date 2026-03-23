@@ -1,0 +1,61 @@
+import pandas as pd
+import matplotlib.pyplot as plt  #import libaries
+import random       #import random
+import numpy as np #import array 
+
+
+size = 20   #amount of numbers to generate
+vec = np.zeros(size, dtype=int) #initilize vector with zeros
+
+for i in range(size):
+    vec[i] = random.randint(1,100) #generates random numbers and puts them in array
+    
+vec2 = vec % 2 #modulus calcuates remainder after division, 0 is even 1 is odd
+
+evens = np.array([]) #list to hold even numbers
+odds = np.array([])  #list to hold odd numbers
+           
+for i in range(size):
+    if vec2[i] == 0:     #if moduus is zero then put it into the evens array
+        evens = np.append(evens, vec[i])   #append add the number to the end of the array
+    else:                                   #all other elements must be odd if not even
+        odds = np.append(odds, vec[i])
+
+print("evens:    ",evens) #prints the output
+print("odds:      ",odds)
+
+
+
+
+
+#part 2 code
+#reads data
+data = pd.read_csv('Python Asignment/O_chem_data (1).csv')
+
+#assigns data to variables
+temp = data['Temperature[C]']
+temp = temp.values
+ethanol = data['ethanol-ethylene']
+propanol = data['propanol-propene']
+but = data['butanol-butene']
+pent = data['pentonal-pentene']
+hex = data['hexanol-hexene']
+hept = data['heptanol-heptene']
+oct = data['octanol-octene']
+
+#plots the data
+plt.plot(temp,ethanol.values,label = 'ethanol-ethylene')
+plt.plot(temp,propanol.values,label = 'propanol-propene')
+plt.plot(temp,but.values,label = 'butanol-butene')
+plt.plot(temp,pent.values,label = 'pentanol-pentene')
+plt.plot(temp,hex.values,label = 'hexanol-hexene')
+plt.plot(temp,hept.values,label = 'heptanol-heptene')
+plt.plot(temp,oct.values,label = 'octanol-octene')
+
+#sets up rest of plot
+plt.xlabel('Temp °C')
+plt.ylabel('log concentration')
+plt.legend()
+plt.title('Alcohol to Alkene Dehydration Reactions')
+plt.grid()
+plt.show()
