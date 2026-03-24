@@ -21,7 +21,7 @@ void takeSnapshot() {
     Serial.println();
   }
   Serial.println();
-  Serial.println("done, ready for next command");
+
 }
 
 void setup() {
