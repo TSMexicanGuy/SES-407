@@ -4,11 +4,11 @@ import time
 import os
 from datetime import datetime
 
-PORT = "COM4"          # change this
+PORT = "COM4"          # Change this to your serial port
 BAUD = 115200
 WIDTH = 32
 HEIGHT = 24
-SAVE_FOLDER = "thermal_pics"
+SAVE_FOLDER = "thermal_snaps"
 
 def is_data_row(line):
     parts = [p.strip() for p in line.split(",")]
@@ -43,15 +43,13 @@ def read_frame(ser, timeout=10):
 
         if is_data_row(line):
             rows.append(parse_row(line))
-
             if len(rows) == HEIGHT:
                 return rows
 
     raise TimeoutError(f"Only got {len(rows)} valid rows before timeout.")
 
-def save_frame(frame, folder):
+def save_csv(frame, folder):
     os.makedirs(folder, exist_ok=True)
-
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     csv_path = os.path.join(folder, f"thermal_{timestamp}.csv")
 
@@ -63,6 +61,7 @@ def save_frame(frame, folder):
 
 def main():
     print(f"Opening {PORT} at {BAUD} baud...")
+
     with serial.Serial(PORT, BAUD, timeout=1) as ser:
         time.sleep(2)
 
@@ -74,19 +73,8 @@ def main():
 
             try:
                 frame = read_frame(ser)
-
-                flat = [temp for row in frame for temp in row]
-                min_temp = min(flat)
-                max_temp = max(flat)
-                center_temp = frame[12][16]
-
-                csv_path = save_frame(frame, SAVE_FOLDER)
-
-                print("\nSaved frame successfully")
-                print(f"Center: {center_temp:.1f} C")
-                print(f"Min:    {min_temp:.1f} C")
-                print(f"Max:    {max_temp:.1f} C")
-                print(f"File:   {csv_path}\n")
+                csv_path = save_csv(frame, SAVE_FOLDER)
+                print(f"\nSaved: {csv_path}\n")
 
             except Exception as e:
                 print(f"Error: {e}\n")

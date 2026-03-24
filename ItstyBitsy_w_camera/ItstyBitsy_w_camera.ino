@@ -6,6 +6,19 @@ Adafruit_MLX90640 mlx;
 float frame[32 * 24];
 String command = "";
 
+void blinkCommand(){
+digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+digitalWrite(LED_BUILTIN, LOW);
+  delay(500);  
+digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  
+}
+
+
 //function that takes a single "picture"
 void takeSnapshot() {
   //if no picture can be obtained, the failure message prints and then exit the function
@@ -13,6 +26,7 @@ void takeSnapshot() {
     Serial.println("Failed to read frame");
     return;
   }
+
   for (int y = 0; y < 24; y++) {
     for (int x = 0; x < 32; x++) {
       Serial.print(frame[y * 32 + x], 1);
@@ -29,7 +43,8 @@ void setup() {
   Serial.begin(115200);
  //delay to let serial connect
 delay(5000);
-
+pinMode(LED_BUILTIN, OUTPUT);
+blinkCommand();
 //starts I2C and sets speed at 400kHz
   Wire.begin();
   Wire.setClock(400000);
