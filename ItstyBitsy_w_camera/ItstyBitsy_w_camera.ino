@@ -51,21 +51,29 @@ delay(10000);
 }
 
 void loop() {
+  //this section of code is what scans the serial monitor
+  // a charcter is assigned the varible c. if it is NOT a enter stroke or new line, than it is added to the command variable
+  //when c is assigned to the enter key we check if the command string is == "snap"
+  //if it is, then we take a picture
+  //if not, it returns an error message
   while (Serial.available()) {
+    //read serial monitor
     char c = Serial.read();
-
+    // removes extra
     if (c == '\n' || c == '\r') {
       command.trim();
-
+//if the command is = "snap", then run the takesnapshot function. 
+//if not, print error message
       if (command.equals("snap")) {
         takeSnapshot();
       } else if (command.length() > 0) {
-        Serial.print("Unknown command: ");
-        Serial.println(command);
+        Serial.println("Unknown command: " + command);
       }
 
       command = "";
-    } else {
+    } 
+
+    else {
       command += c;
     }
   }
