@@ -13,7 +13,6 @@ void takeSnapshot() {
     Serial.println("Failed to read frame");
     return;
   }
-
   for (int y = 0; y < 24; y++) {
     for (int x = 0; x < 32; x++) {
       Serial.print(frame[y * 32 + x], 1);
@@ -22,13 +21,14 @@ void takeSnapshot() {
     Serial.println();
   }
   Serial.println();
+  Serial.println("done, ready for next command");
 }
 
 void setup() {
   //open serial communication
   Serial.begin(115200);
  //delay to let serial connect
-delay(10000);
+delay(5000);
 
 //starts I2C and sets speed at 400kHz
   Wire.begin();
@@ -47,7 +47,7 @@ delay(10000);
   mlx.setResolution(MLX90640_ADC_18BIT);
   mlx.setRefreshRate(MLX90640_2_HZ);
 
-  Serial.println("Thermal Camera ready. going into main loop");
+  Serial.print("Thermal Camera ready. going into main loop");
 }
 
 void loop() {
@@ -56,6 +56,7 @@ void loop() {
   //when c is assigned to the enter key we check if the command string is == "snap"
   //if it is, then we take a picture
   //if not, it returns an error message
+  //either way the command string is set back to blank
   while (Serial.available()) {
     //read serial monitor
     char c = Serial.read();
