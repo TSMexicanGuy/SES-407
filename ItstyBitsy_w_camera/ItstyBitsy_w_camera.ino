@@ -1,5 +1,6 @@
 #include <Wire.h> // for I2C
 #include <Adafruit_MLX90640.h> // thermal camera libary
+const int closeSwitch = 2;
 
 //create objects
 Adafruit_MLX90640 mlx;
@@ -15,9 +16,28 @@ digitalWrite(LED_BUILTIN, HIGH);
   delay(500);
 digitalWrite(LED_BUILTIN, LOW);
   delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+digitalWrite(LED_BUILTIN, LOW);
+  delay(500);  
+digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
   
 }
 
+void closeShutter(){
+// this function is responisble for closing the shutter
+//first it will check if the shutter is already close. if so it will return to the loop
+//then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
+  if (digitalRead(closeSwitch) == HIGH ){
+    blinkCommand();
+    return;
+  }  
+
+
+}
 
 //function that takes a single "picture"
 void takeSnapshot() {
@@ -44,6 +64,7 @@ void setup() {
  //delay to let serial connect
 delay(5000);
 pinMode(LED_BUILTIN, OUTPUT);
+pinMode(closeSwitch,INPUT_PULLUP);
 blinkCommand();
 //starts I2C and sets speed at 400kHz
   Wire.begin();
