@@ -1,6 +1,7 @@
 #include <Wire.h> // for I2C
 #include <Adafruit_MLX90640.h> // thermal camera libary
-const int closeSwitch = 2;
+const int closeSwitch = 7;
+const int tima = 50;
 
 //create objects
 Adafruit_MLX90640 mlx;
@@ -8,23 +9,22 @@ float frame[32 * 24];
 String command = "";
 
 void blinkCommand(){
-digitalWrite(LED_BUILTIN, HIGH);
-  delay(500);
-digitalWrite(LED_BUILTIN, LOW);
-  delay(500);  
-digitalWrite(LED_BUILTIN, HIGH);
-  delay(500);
-digitalWrite(LED_BUILTIN, LOW);
-  delay(500);
   digitalWrite(LED_BUILTIN, HIGH);
-  delay(500);
-digitalWrite(LED_BUILTIN, LOW);
-  delay(500);  
-digitalWrite(LED_BUILTIN, HIGH);
-  delay(500);
-digitalWrite(LED_BUILTIN, LOW);
-  delay(500);
-  
+  delay(tima);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(tima);  
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(tima);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(tima);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(tima);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(tima);  
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(tima);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(tima);
 }
 
 void closeShutter(){
@@ -33,8 +33,11 @@ void closeShutter(){
 //then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
   if (digitalRead(closeSwitch) == HIGH ){
     blinkCommand();
-    return;
-  }  
+    Serial.println("switch is closed");
+  }
+    else {
+      Serial.println("switch is open");
+    }  
 
 
 }
@@ -83,7 +86,7 @@ blinkCommand();
   mlx.setResolution(MLX90640_ADC_18BIT);
   mlx.setRefreshRate(MLX90640_2_HZ);
 
-  Serial.print("Thermal Camera ready. going into main loop");
+  Serial.println("Thermal Camera ready. going into main loop");
 }
 
 void loop() {
@@ -103,7 +106,12 @@ void loop() {
 //if not, print error message
       if (command.equals("snap")) {
         takeSnapshot();
-      } else if (command.length() > 0) {
+      }
+      else if(command.equals("closedoor")){
+        closeShutter();
+      }
+      
+       else if (command.length() > 0) {
         Serial.println("Unknown command: " + command);
       }
 
