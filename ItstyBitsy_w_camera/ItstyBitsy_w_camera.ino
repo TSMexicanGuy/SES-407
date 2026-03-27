@@ -1,6 +1,7 @@
 #include <Wire.h> // for I2C
 #include <Adafruit_MLX90640.h> // thermal camera libary
 const int closeSwitch = 7;
+const int openSwitch = 9;
 const int tima = 50;
 
 //create objects
@@ -28,9 +29,9 @@ void blinkCommand(){
 }
 
 void closeShutter(){
-// this function is responisble for closing the shutter
-//first it will check if the shutter is already close. if so it will return to the loop
-//then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
+  // this function is responisble for closing the shutter
+  //first it will check if the shutter is already close. if so it will return to the loop
+  //then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
   if (digitalRead(closeSwitch) == HIGH ){
     blinkCommand();
     Serial.println("switch is closed");
@@ -68,6 +69,7 @@ void setup() {
 delay(5000);
 pinMode(LED_BUILTIN, OUTPUT);
 pinMode(closeSwitch,INPUT_PULLUP);
+pinModes(openSwitch,INPUT_PULLUP);
 blinkCommand();
 //starts I2C and sets speed at 400kHz
   Wire.begin();
@@ -102,12 +104,15 @@ void loop() {
     // removes extra
     if (c == '\n' || c == '\r') {
       command.trim();
-//if the command is = "snap", then run the takesnapshot function. 
-//if not, print error message
+  //if the command is = "snap", then run the takesnapshot function. 
+  //if not, print error message
       if (command.equals("snap")) {
         takeSnapshot();
       }
       else if(command.equals("closedoor")){
+        closeShutter();
+      }
+      else if(command.equals("opendoor")){
         closeShutter();
       }
       
