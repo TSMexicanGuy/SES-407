@@ -15,6 +15,14 @@ def read_IR_data():
         print("great success, we have connection!!")
         #send snap command to itsybitsy
         ser.write(b'snap\n')
+        time.sleep(1)
+        data = []
+        for i in range(24):  # Loop 24 times for 24 rows
+            line = ser.readline().decode('utf-8').strip()
+            if line:  # Only process non-empty lines
+                values = line.split(',')
+                # Convert each value to float and add to data list
+                data.extend([float(v) for v in values if v])
 
 
 
@@ -23,4 +31,4 @@ def read_IR_data():
         print("could not connect to serial port")
         return None
     
-read_IR_data()
+
