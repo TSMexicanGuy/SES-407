@@ -43,6 +43,23 @@ void closeShutter(){
 
 }
 
+
+void openShutter(){
+  // this function is responisble for closing the shutter
+  //first it will check if the shutter is already close. if so it will return to the loop
+  //then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
+  if (digitalRead(openSwitch) == HIGH ){
+    blinkCommand();
+    Serial.println("switch is closed");
+  }
+    else {
+    blinkCommand();
+      Serial.println("switch is open");
+    }  
+
+
+}
+
 //function that takes a single "picture"
 void takeSnapshot() {
   //if no picture can be obtained, the failure message prints and then exit the function
@@ -69,7 +86,7 @@ void setup() {
 delay(5000);
 pinMode(LED_BUILTIN, OUTPUT);
 pinMode(closeSwitch,INPUT_PULLUP);
-pinModes(openSwitch,INPUT_PULLUP);
+pinMode(openSwitch,INPUT_PULLUP);
 blinkCommand();
 //starts I2C and sets speed at 400kHz
   Wire.begin();
@@ -113,7 +130,7 @@ void loop() {
         closeShutter();
       }
       else if(command.equals("opendoor")){
-        closeShutter();
+        openShutter();
       }
       
        else if (command.length() > 0) {
