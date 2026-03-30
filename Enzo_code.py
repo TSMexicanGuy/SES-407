@@ -23,12 +23,33 @@ def read_IR_data():
                 values = line.split(',')
                 # Convert each value to float and add to data list
                 data.extend([float(v) for v in values if v])
-
-
-
-#if it cant, prints error message and returns nothing
+        
+        # Convert the collected data list into a 2D numpy array with 24 rows
+        # The reshape automatically calculates columns based on total data points
+        data_array = np.array(data).reshape(24, -1)
+        
+        # Print a label to the terminal
+        print("Camera data:")
+        
+        # Display the 2D numpy array to the terminal so you can see the camera output
+        print(data_array)
+        
+        # Close the serial connection to free up the COM port
+        ser.close()
+        
+        # Return the numpy array so it can be used elsewhere in the program
+        return data_array
+        
+    # If connection fails, catch the exception
     except:
+        # Print error message to terminal
         print("could not connect to serial port")
+        # Return None to indicate the function failed
         return None
+
+# Call the function to execute it
+read_IR_data()
+    
+
     
 
