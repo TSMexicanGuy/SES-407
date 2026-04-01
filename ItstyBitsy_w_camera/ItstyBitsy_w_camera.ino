@@ -82,7 +82,7 @@ void takeSnapshot() {
     }
     Serial.println();
   }
-  Serial.println();
+
 
 }
 
