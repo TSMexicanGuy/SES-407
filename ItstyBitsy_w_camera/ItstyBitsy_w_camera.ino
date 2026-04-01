@@ -1,8 +1,11 @@
 #include <Wire.h> // for I2C
 #include <Adafruit_MLX90640.h> // thermal camera libary
+#include <Servo.h> ///servo libary
+Servo shutterServo; //shutterServo is the servo
 const int closeSwitch = 7;
 const int openSwitch = 9;
 const int tima = 50;
+const int servoStep = 10;//angle servo will move in each iteration
 
 //create objects
 Adafruit_MLX90640 mlx;
@@ -32,14 +35,17 @@ void closeShutter(){
   // this function is responisble for closing the shutter
   //first it will check if the shutter is already close. if so it will return to the loop
   //then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
+
+    while (digitalRead(closeSwitch) == LOW) {
+      
+      Serial.println("switch is open");
+      shutterServo.write(servoStep);
+      delay(500);
+    }  
   if (digitalRead(closeSwitch) == HIGH ){
     blinkCommand();
     Serial.println("switch is closed");
   }
-    else {
-      Serial.println("switch is open");
-    }  
-
 
 }
 
@@ -52,9 +58,10 @@ void openShutter(){
     blinkCommand();
     Serial.println("switch is closed");
   }
-    else {
-    blinkCommand();
+    while(digitalRead(openSwitch) == LOW) {
+      shutterServo.write(-1 * servoStep);
       Serial.println("switch is open");
+      delay(100);
     }  
 
 
@@ -87,6 +94,7 @@ delay(5000);
 pinMode(LED_BUILTIN, OUTPUT);
 pinMode(closeSwitch,INPUT_PULLUP);
 pinMode(openSwitch,INPUT_PULLUP);
+shutterServo.attach(9); //set pin for servo control
 blinkCommand();
 //starts I2C and sets speed at 400kHz
   Wire.begin();
