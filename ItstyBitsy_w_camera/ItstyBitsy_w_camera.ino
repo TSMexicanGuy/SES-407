@@ -39,7 +39,7 @@ void closeShutter(){
     while (digitalRead(closeSwitch) == LOW) {
       
       Serial.println("switch is open");
-      shutterServo.write(servoStep);
+      shutterServo.write(servoStep + shutterServo.read());
       delay(500);
     }  
   if (digitalRead(closeSwitch) == HIGH ){
@@ -94,7 +94,10 @@ delay(5000);
 pinMode(LED_BUILTIN, OUTPUT);
 pinMode(closeSwitch,INPUT_PULLUP);
 pinMode(openSwitch,INPUT_PULLUP);
-shutterServo.attach(9); //set pin for servo control
+
+shutterServo.write(15);
+shutterServo.attach(11); //set pin for servo control
+
 blinkCommand();
 //starts I2C and sets speed at 400kHz
   Wire.begin();
