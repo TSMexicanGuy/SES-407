@@ -32,12 +32,7 @@ void blinkCommand(){
 }
 
 void closeShutter(){
-  // this function is responisble for closing the shutter
-  //first it will check if the shutter is already close. if so it will return to the loop
-  //then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
-
     while (digitalRead(closeSwitch) == LOW) {
-      
       Serial.println("switch is open");
       shutterServo.write(servoStep + shutterServo.read());
       delay(500);
@@ -46,25 +41,18 @@ void closeShutter(){
     blinkCommand();
     Serial.println("switch is closed");
   }
-
 }
 
-
 void openShutter(){
-  // this function is responisble for closing the shutter
-  //first it will check if the shutter is already close. if so it will return to the loop
-  //then a while loop will start running. this will turn the motor a certain direction until the limit switch detects that it is closed. 
-  if (digitalRead(openSwitch) == HIGH ){
-    blinkCommand();
+  while (digitalRead(openSwitch) == HIGH ){
     Serial.println("switch is closed");
+      shutterServo.write(-1 * servoStep + shutterServo.read());
+      delay(500);
   }
     while(digitalRead(openSwitch) == LOW) {
-      shutterServo.write(-1 * servoStep);
-      Serial.println("switch is open");
-      delay(100);
+    blinkCommand();
+    Serial.println("switch is open");
     }  
-
-
 }
 
 //function that takes a single "picture"
@@ -87,10 +75,15 @@ void takeSnapshot() {
 }
 
 void setup() {
+
+
+
   //open serial communication
   Serial.begin(115200);
  //delay to let serial connect
-delay(5000);
+  while (!Serial) {
+    delay(100);
+  }
 pinMode(LED_BUILTIN, OUTPUT);
 pinMode(closeSwitch,INPUT_PULLUP);
 pinMode(openSwitch,INPUT_PULLUP);
@@ -126,6 +119,10 @@ void loop() {
   //if it is, then we take a picture
   //if not, it returns an error message
   //either way the command string is set back to blank
+
+    //handshake message receive + send
+
+
   while (Serial.available()) {
     //read serial monitor
     char c = Serial.read();
@@ -137,10 +134,13 @@ void loop() {
       if (command.equals("snap")) {
         takeSnapshot();
       }
-      else if(command.equals("closedoor")){
+      else if(command.equals("ping")){
+        Serial.println("pong");
+      }
+      else if(command.equals("close")){
         closeShutter();
       }
-      else if(command.equals("opendoor")){
+      else if(command.equals("open")){
         openShutter();
       }
       
