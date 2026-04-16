@@ -2,10 +2,10 @@
 #include <Adafruit_MLX90640.h> // thermal camera libary
 #include <Servo.h> ///servo libary
 Servo shutterServo; //shutterServo is the servo
-const int closeSwitch = 7;
-const int openSwitch = 9;
+const int closeSwitch = 9;
+const int openSwitch = 7;
 const int tima = 50;
-const int servoStep = 10;//angle servo will move in each iteration
+const int servoStep = 5;//angle servo will move in each iteration
 
 //create objects
 Adafruit_MLX90640 mlx;
@@ -33,25 +33,25 @@ void blinkCommand(){
 
 void closeShutter(){
     while (digitalRead(closeSwitch) == LOW) {
-      Serial.println("switch is open");
+ //     Serial.println("switch is open");
       shutterServo.write(servoStep + shutterServo.read());
       delay(500);
     }  
   if (digitalRead(closeSwitch) == HIGH ){
     blinkCommand();
-    Serial.println("switch is closed");
+  //  Serial.println("switch is closed");
   }
 }
 
 void openShutter(){
-  while (digitalRead(openSwitch) == HIGH ){
-    Serial.println("switch is closed");
-      shutterServo.write(-1 * servoStep + shutterServo.read());
+  while (digitalRead(openSwitch) == LOW ){
+    //Serial.println("switch is open");
+    shutterServo.write(-1 * servoStep + shutterServo.read());
       delay(500);
   }
-    while(digitalRead(openSwitch) == LOW) {
+    if(digitalRead(openSwitch) == HIGH) {
     blinkCommand();
-    Serial.println("switch is open");
+    //Serial.println("switch is closed");
     }  
 }
 
@@ -59,7 +59,7 @@ void openShutter(){
 void takeSnapshot() {
   //if no picture can be obtained, the failure message prints and then exit the function
   if (mlx.getFrame(frame) != 0) {
-    Serial.println("Failed to read frame");
+    //Serial.println("Failed to read frame");
     return;
   }
 
@@ -79,7 +79,7 @@ void setup() {
 
 
   //open serial communication
-  Serial.begin(115200);
+  Serial.begin(74880);
  //delay to let serial connect
   while (!Serial) {
     delay(100);
