@@ -12,6 +12,20 @@ Adafruit_MLX90640 mlx;
 float frame[32 * 24];
 String command = "";
 
+
+void movein(){
+shutterServo.writeMicroseconds(1450);
+delay(50);
+shutterServo.writeMicroseconds(1500);
+}
+
+
+void moveout(){
+shutterServo.writeMicroseconds(1540);
+delay(50);
+shutterServo.writeMicroseconds(1500);
+}
+
 void blinkCommand(){
   digitalWrite(LED_BUILTIN, HIGH);
   delay(tima);
@@ -34,8 +48,8 @@ void blinkCommand(){
 void closeShutter(){
     while (digitalRead(closeSwitch) == LOW) {
  //     Serial.println("switch is open");
-      shutterServo.write(servoStep + shutterServo.read());
-      delay(500);
+    movein();
+      delay(750);
     }  
   if (digitalRead(closeSwitch) == HIGH ){
     blinkCommand();
@@ -46,8 +60,8 @@ void closeShutter(){
 void openShutter(){
   while (digitalRead(openSwitch) == LOW ){
     //Serial.println("switch is open");
-    shutterServo.write(-1 * servoStep + shutterServo.read());
-      delay(500);
+    moveout();
+      delay(750);
   }
     if(digitalRead(openSwitch) == HIGH) {
     blinkCommand();
@@ -88,9 +102,9 @@ pinMode(LED_BUILTIN, OUTPUT);
 pinMode(closeSwitch,INPUT_PULLUP);
 pinMode(openSwitch,INPUT_PULLUP);
 
-shutterServo.write(15);
-shutterServo.attach(11); //set pin for servo control
 
+shutterServo.attach(11); //set pin for servo control
+//shutterServo.writeMicroseconds(1500);
 blinkCommand();
 //starts I2C and sets speed at 400kHz
   Wire.begin();
